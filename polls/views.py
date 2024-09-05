@@ -1,3 +1,4 @@
+from typing import Any
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import F
@@ -11,9 +12,15 @@ from .models import Question, Choice
 class IndexView(generic.ListView):
         template_name = "polls/index.html"
         context_object_name = "latest_question_list"
+        title = "Polls Index"
         def get_queryset(self):
                 """ Return the last 5 published questions. """
                 return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[:5]
+        
+        def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+                context = super().get_context_data(**kwargs)
+                context['title'] = self.title
+                return context
         
 class DetailView(generic.DetailView):
         model = Question

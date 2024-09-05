@@ -1,12 +1,15 @@
-{% extends "polls/_base.html" %}
+{% extends "base.html" %}
 
+{% block title %}{{ title }}{% endblock %}
 {% block content %}
+
+<h2>{{ title }}</h2>
 
 {% if latest_question_list %}
     <ul>
         {% for question in latest_question_list %}
             <li>
-                <a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a>
+                <a href="{{ question.get_absolute_url }}">{{ question.question_text }}</a>
             </li>
         {% endfor %}
     </ul>
