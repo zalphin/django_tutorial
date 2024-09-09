@@ -1,3 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+<h2>{{ title }}</h2>
+
 <h1>Blog List</h1>
 {% for post in object_list %}
     <div>
@@ -5,3 +12,5 @@
         <p>{{ post.description }}</p>
     </div>
 {% endfor %}
+
+{% endblock %}

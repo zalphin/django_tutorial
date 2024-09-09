@@ -17,7 +17,7 @@ class IndexView(generic.ListView):
                 """ Return the last 5 published questions. """
                 return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[:5]
         
-        def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
                 context['title'] = self.title
                 return context
@@ -25,19 +25,27 @@ class IndexView(generic.ListView):
 class DetailView(generic.DetailView):
         model = Question
         template_name = "polls/detail.html"
-
+        title = "Poll Details"
         def get_queryset(self):
                 """
                 Excludes any questions that aren't published yet.
                 """
                 return Question.objects.filter(pub_date__lte=timezone.now())
+        def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+                context = super().get_context_data(**kwargs)
+                context['title'] = self.title
+                return context
 
 class ResultsView(generic.DetailView):
         model = Question
         template_name = "polls/results.html"
-
+        title = "Poll results"
         def get_queryset(self):
                 return Question.objects.filter(pub_date__lte=timezone.now())
+        def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+                context = super().get_context_data(**kwargs)
+                context['title'] = self.title
+                return context
 
 def vote(request, question_id):
         question = get_object_or_404(Question, pk=question_id)
