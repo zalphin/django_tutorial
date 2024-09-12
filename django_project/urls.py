@@ -25,6 +25,7 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name="home.html"), name="home"),
     path('posts/', include("posts.urls")),
     path('polls/', include("django_polls.urls")),
+    path('accounts/', include("django.contrib.auth.urls")),
 ]
 
 if not settings.TESTING:
