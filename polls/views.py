@@ -5,11 +5,13 @@ from django.db.models import F
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Question, Choice
 
 # Create your views here.
-class IndexView(generic.ListView):
+class IndexView(LoginRequiredMixin, generic.ListView):
         template_name = "polls/index.html"
         context_object_name = "latest_question_list"
         title = "Polls Index"
@@ -22,7 +24,7 @@ class IndexView(generic.ListView):
                 context['title'] = self.title
                 return context
         
-class DetailView(generic.DetailView):
+class DetailView(LoginRequiredMixin, generic.DetailView):
         model = Question
         template_name = "polls/detail.html"
         title = "Poll Details"
@@ -36,7 +38,7 @@ class DetailView(generic.DetailView):
                 context['title'] = self.title
                 return context
 
-class ResultsView(generic.DetailView):
+class ResultsView(LoginRequiredMixin, generic.DetailView):
         model = Question
         template_name = "polls/results.html"
         title = "Poll results"
@@ -47,6 +49,13 @@ class ResultsView(generic.DetailView):
                 context['title'] = self.title
                 return context
 
+@login_required
+def test_view(request):
+        title = "Test View"
+        context = {'title': title}
+        return render(request, "polls/test_view.html", context)
+
+@login_required
 def vote(request, question_id):
         question = get_object_or_404(Question, pk=question_id)
         try:

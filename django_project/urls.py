@@ -19,13 +19,18 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from debug_toolbar.toolbar import debug_toolbar_urls
 from django.conf import settings
+from django.contrib.auth import views as auth_views
+
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name="home.html"), name="home"),
     path('posts/', include("posts.urls")),
-    path('polls/', include("django_polls.urls")),
+    path('polls/', include("polls.urls")),
     path('accounts/', include("django.contrib.auth.urls")),
+    path("registration/login/", auth_views.LoginView.as_view()),
 ]
 
 if not settings.TESTING:
