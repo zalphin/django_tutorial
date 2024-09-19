@@ -2,11 +2,12 @@ from typing import Any
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import F
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+import random
 
 from .models import Question, Choice
 
@@ -32,7 +33,7 @@ class DetailView(LoginRequiredMixin, generic.DetailView):
                 """
                 Excludes any questions that aren't published yet.
                 """
-                return Question.objects.filter(pub_date__lte=timezone.now())
+                return Question.objects # .filter(pub_date__lte=timezone.now())
         def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
                 context = super().get_context_data(**kwargs)
                 context['title'] = self.title
@@ -48,6 +49,17 @@ class ResultsView(LoginRequiredMixin, generic.DetailView):
                 context = super().get_context_data(**kwargs)
                 context['title'] = self.title
                 return context
+
+class CreateView(LoginRequiredMixin, generic.CreateView):
+        model = Question
+        template_name = "polls/create.html"
+        fields = ['question_text', 'pub_date']
+        def get_success_url(self):
+                if random.choice([1,2]) == 1:
+                        return reverse_lazy("polls:index")
+                else:
+                        return reverse_lazy("home")
+        
 
 @login_required
 def test_view(request):
