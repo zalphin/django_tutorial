@@ -33,8 +33,9 @@
                     </form>
                 {% else %}
                     <a href="{% url 'login' %}?next={{ request.path }}" type="button" class="btn btn-outline-primary me-2">Login</a>
+                    <a href="#" type="button" class="btn btn-primary">Sign Up</a>
                 {% endif %}
-                <!-- <butype="button" class="btn btn-primary">Sign-up</button> -->
+                
             </div>
         </header>
 
