@@ -55,10 +55,7 @@ class CreateView(LoginRequiredMixin, generic.CreateView):
         template_name = "polls/create.html"
         fields = ['question_text', 'pub_date']
         def get_success_url(self):
-                if random.choice([1,2]) == 1:
-                        return reverse_lazy("polls:index")
-                else:
-                        return reverse_lazy("home")
+                return reverse_lazy("polls:index")
         
 
 @login_required

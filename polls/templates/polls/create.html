@@ -8,7 +8,17 @@
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
 
-    {{ form.as_p }}
+    <!-- {{ form.as_p }} -->
+    <table>
+        <tr>
+            <td>{{ form.question_text.label_tag }}</td>
+            <td>{{ form.question_text }}</td>
+        </tr>
+        <tr>
+            <td>{{ form.pub_date.label_tag }}</td>
+            <td>{{ form.pub_date }}</td>
+        </tr>
+    </table>
 
     <input type="submit" value="Submit">
 </form>

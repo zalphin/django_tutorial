@@ -6,13 +6,28 @@
 <h2>{{ title }}</h2>
 
 {% if latest_question_list %}
-    <ul>
-        {% for question in latest_question_list %}
-            <li>
-                <a href="{{ question.get_absolute_url }}">{{ question.question_text }}</a>
-            </li>
-        {% endfor %}
-    </ul>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Published Date</th>
+                <th>Created By</th>
+                <th>Functions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for question in latest_question_list %}
+                <tr>
+                    <td><a href="{{ question.get_absolute_url }}">{{ question.question_text }}</a></td>
+                    <td>{{ question.pub_date }}</td>
+                    <td>{{ question.created_by }}</td>
+                    <td>
+                        <button tton type="submit" class="btn btn-sm btn-secondary me-2">Test</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
