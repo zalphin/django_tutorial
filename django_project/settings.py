@@ -94,10 +94,8 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'OPTIONS': {
-            "service": "aws_service",
-        }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'django_world.db',
     }
 }
 
