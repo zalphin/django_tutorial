@@ -1,8 +1,9 @@
 /db.sqlite3
 
 # Byte-compiled / optimized / DLL files
-__pycache__/
+**/__pycache__/**gi */
 *.py[cod]
+*.pyc
 
 # C extensions
 *.so
@@ -51,5 +52,4 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
-django_project/__pycache__/settings.cpython-312.pyc
 .vscode/launch.json
