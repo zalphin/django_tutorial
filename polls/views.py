@@ -3,10 +3,11 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import F
 from django.urls import reverse, reverse_lazy
-from django.views import generic
+from django.views import generic, View
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .forms import *
 import random
 
 from .models import Question, Choice
@@ -42,6 +43,7 @@ class DetailView(LoginRequiredMixin, generic.DetailView):
 class ResultsView(LoginRequiredMixin, generic.DetailView):
 	model = Question
 	template_name = "polls/results.html"
+	form_class = CreateNewPollForm
 	title = "Poll results"
 	def get_queryset(self):
 		return Question.objects.filter(pub_date__lte=timezone.now())
@@ -50,12 +52,22 @@ class ResultsView(LoginRequiredMixin, generic.DetailView):
 		context['title'] = self.title
 		return context
 
-class CreateView(LoginRequiredMixin, generic.CreateView):
+class CreateView(LoginRequiredMixin, generic.FormView):
 	model = Question
 	template_name = "polls/create.html"
-	fields = ['question_text', 'pub_date']
+	form_class = CreateNewPollForm
 	def get_success_url(self):
 		return reverse_lazy("polls:index")
+	def post(self, request, **kwargs):
+		form = self.form_class(request.POST)
+		if form.is_valid():
+			print( form.response_1 )
+			print( form.response_2 )
+			print( form.response_3)
+			# Put object creation logic here
+		else:
+			print("Form is invalid")
+		return HttpResponseRedirect(reverse("polls:index"))
 	
 
 @login_required
