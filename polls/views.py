@@ -60,14 +60,20 @@ class CreateView(LoginRequiredMixin, generic.FormView):
 		return reverse_lazy("polls:index")
 	def post(self, request, **kwargs):
 		form = self.form_class(request.POST)
-		if form.is_valid():
-			print( form.response_1 )
-			print( form.response_2 )
-			print( form.response_3)
+		if (form.is_valid()):
 			# Put object creation logic here
-		else:
-			print("Form is invalid")
-		return HttpResponseRedirect(reverse("polls:index"))
+			data = form.cleaned_data
+			question = Question.objects.create(question_text = data['question_text'], pub_date = data['pub_date'])
+			current_user = request.user
+			question.created_by = current_user.id
+			question.save()
+			responses = [ v for k,v in data.items() if ('response' in k and v != '') ]
+			for response in responses:
+				choice = Choice.objects.create(choice_text = response, question=question)
+				choice.save()
+			return HttpResponseRedirect(reverse("polls:index"))
+		return render(request, "books/create.html")
+		
 	
 
 @login_required

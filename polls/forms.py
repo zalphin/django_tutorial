@@ -6,6 +6,3 @@ class CreateNewPollForm(forms.Form):
     response_1 = forms.CharField()
     response_2 = forms.CharField()
     response_3 = forms.CharField()
-
-    def is_valid(self):
-        return True
