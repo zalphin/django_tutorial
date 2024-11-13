@@ -1,6 +1,7 @@
 from typing import Any
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
+from django.db import transaction
 from django.db.models import F
 from django.urls import reverse, reverse_lazy
 from django.views import generic, View
@@ -73,6 +74,31 @@ class CreateView(LoginRequiredMixin, generic.FormView):
 				choice.save()
 			return HttpResponseRedirect(reverse("polls:index"))
 		return render(request, "books/create.html")
+
+class QuestionChoiceCreate(LoginRequiredMixin, CreateView):
+	model = Question
+	fields = ["question_text", "pub_date"]
+	success_url = reverse_lazy("polls:index")
+
+	def get_context_data(self, **kwargs):
+		data = super(QuestionChoiceCreate, self).get_context_data(**kwargs)
+		if self.request.POST:
+			data['choices'] = ChoiceFormSet()
+		return data
+	
+	def form_valid(self, form):
+		context = self.get_context_data()
+		choices = context['choices']
+		with transaction.atomic():
+			self.object = form.save()
+
+			if choices.is_valid():
+				choices.instance = self.object
+				choices.save()
+		return super(QuestionChoiceCreate, self).form_valid(form)
+	
+class QuestionCreate(LoginRequiredMixin, CreateView):
+	pass
 		
 	
 

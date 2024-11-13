@@ -1,4 +1,5 @@
 from django import forms
+from .models import Question, Choice
 
 class CreateNewPollForm(forms.Form):
     question_text = forms.CharField(label="Question:", required=True)
@@ -9,3 +10,13 @@ class CreateNewPollForm(forms.Form):
     response_4 = forms.CharField(required=False)
     response_5 = forms.CharField(required=False)
     response_6 = forms.CharField(required=False)
+
+
+# FamilyMemberForm from tutorial
+class ChoiceForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        exclude = ()
+
+# FamilyMemberFormSet from tutorial
+ChoiceFormSet = forms.inlineformset_factory(Question, Choice, form=ChoiceForm, extra=1)
