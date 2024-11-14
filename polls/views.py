@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.db import transaction
 from django.db.models import F
 from django.urls import reverse, reverse_lazy
+from django.views.generic.edit import CreateView
 from django.views import generic, View
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
@@ -53,27 +54,27 @@ class ResultsView(LoginRequiredMixin, generic.DetailView):
 		context['title'] = self.title
 		return context
 
-class CreateView(LoginRequiredMixin, generic.FormView):
-	model = Question
-	template_name = "polls/create.html"
-	form_class = CreateNewPollForm
-	def get_success_url(self):
-		return reverse_lazy("polls:index")
-	def post(self, request, **kwargs):
-		form = self.form_class(request.POST)
-		if (form.is_valid()):
-			# Put object creation logic here
-			data = form.cleaned_data
-			question = Question.objects.create(question_text = data['question_text'], pub_date = data['pub_date'])
-			current_user = request.user
-			question.created_by = current_user.id
-			question.save()
-			responses = [ v for k,v in data.items() if ('response' in k and v != '') ]
-			for response in responses:
-				choice = Choice.objects.create(choice_text = response, question=question)
-				choice.save()
-			return HttpResponseRedirect(reverse("polls:index"))
-		return render(request, "books/create.html")
+# class CreateView(LoginRequiredMixin, generic.FormView):
+# 	model = Question
+# 	template_name = "polls/create.html"
+# 	form_class = CreateNewPollForm
+# 	def get_success_url(self):
+# 		return reverse_lazy("polls:index")
+# 	def post(self, request, **kwargs):
+# 		form = self.form_class(request.POST)
+# 		if (form.is_valid()):
+# 			# Put object creation logic here
+# 			data = form.cleaned_data
+# 			question = Question.objects.create(question_text = data['question_text'], pub_date = data['pub_date'])
+# 			current_user = request.user
+# 			question.created_by = current_user.id
+# 			question.save()
+# 			responses = [ v for k,v in data.items() if ('response' in k and v != '') ]
+# 			for response in responses:
+# 				choice = Choice.objects.create(choice_text = response, question=question)
+# 				choice.save()
+# 			return HttpResponseRedirect(reverse("polls:index"))
+# 		return render(request, "books/create.html")
 
 class QuestionChoiceCreate(LoginRequiredMixin, CreateView):
 	model = Question
@@ -98,7 +99,8 @@ class QuestionChoiceCreate(LoginRequiredMixin, CreateView):
 		return super(QuestionChoiceCreate, self).form_valid(form)
 	
 class QuestionCreate(LoginRequiredMixin, CreateView):
-	pass
+	model = Question
+	fields = ['question_text', 'pub_date']
 		
 	
 
