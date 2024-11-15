@@ -36,9 +36,8 @@
             </tr>
         {% endfor %}
     </table>
-    <input type="submit" value="Save"/><a href="{% url 'polls:index' %}">Back</a>
+    <input type="submit" value="Save" class="btn btn-sm btn-success"/><a href="{% url 'polls:index' %}" class="btn btn-sm btn-info">Back</a>
 </form>
-
 
 <script type="text/javascript">
     $('.formset_row').formset({
