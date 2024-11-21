@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.db import transaction
 from django.db.models import F
 from django.urls import reverse, reverse_lazy
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views import generic, View
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
@@ -21,7 +21,7 @@ class IndexView(LoginRequiredMixin, generic.ListView):
 	title = "Polls Index"
 	def get_queryset(self):
 		""" Return the last 5 published questions. """
-		return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[:5]
+		return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")
 	
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -78,12 +78,15 @@ class ResultsView(LoginRequiredMixin, generic.DetailView):
 
 class QuestionChoiceCreate(LoginRequiredMixin, CreateView):
 	model = Question
+	template_name = 'polls/question_form.html'
 	fields = ["question_text", "pub_date"]
 	success_url = reverse_lazy("polls:index")
 
 	def get_context_data(self, **kwargs):
 		data = super(QuestionChoiceCreate, self).get_context_data(**kwargs)
 		if self.request.POST:
+			data['choices'] = ChoiceFormSet(self.request.POST)
+		else:
 			data['choices'] = ChoiceFormSet()
 		return data
 	
@@ -91,12 +94,39 @@ class QuestionChoiceCreate(LoginRequiredMixin, CreateView):
 		context = self.get_context_data()
 		choices = context['choices']
 		with transaction.atomic():
+			form.instance.created_by = self.request.user.id
 			self.object = form.save()
-
 			if choices.is_valid():
 				choices.instance = self.object
 				choices.save()
 		return super(QuestionChoiceCreate, self).form_valid(form)
+	
+	def get_success_url(self):
+		return reverse_lazy('polls:index')
+	
+class QuestionChoiceUpdate(LoginRequiredMixin, UpdateView):
+	model = Question
+	template_name = 'polls/question_form.html'
+	fields = ["question_text", "pub_date"]
+	success_url = reverse_lazy("polls:index")
+	
+	def get_context_data(self, **kwargs):
+		data = super(QuestionChoiceUpdate, self).get_context_data(**kwargs)
+		if self.request.POST:
+			data['choices'] = ChoiceFormSet(self.request.POST, instance=self.object)
+		else:
+			data['choices'] = ChoiceFormSet(instance=self.object)
+		return data
+	def form_valid(self, form):
+		context = self.get_context_data()
+		choices = context['choices']
+		with transaction.atomic():
+			self.object = form.save()
+			if choices.is_valid():
+				choices.instance = self.object
+				choices.save()
+		return super(QuestionChoiceCreate, self).form_valid(form)
+
 	
 class QuestionCreate(LoginRequiredMixin, CreateView):
 	model = Question

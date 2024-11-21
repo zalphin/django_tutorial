@@ -19,4 +19,4 @@ class ChoiceForm(forms.ModelForm):
         exclude = ()
 
 # FamilyMemberFormSet from tutorial
-ChoiceFormSet = forms.inlineformset_factory(Question, Choice, form=ChoiceForm, extra=1)
+ChoiceFormSet = forms.inlineformset_factory(Question, Choice, form=ChoiceForm, fields=['choice_text'], extra=2, can_delete=True)
