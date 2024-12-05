@@ -22,8 +22,8 @@
                     <td>{{ question.pub_date }}</td>
                     <td>{{ question.created_by }}</td>
                     <td>
-                        <button tton type="submit" class="btn btn-sm btn-primary">Show</button>
-                        <button tton type="submit" class="btn btn-sm btn-secondary">Edit</button>
+                        <a href="{{ question.get_absolute_url }}"><button tton class="btn btn-sm btn-primary">Show</button></a>
+                        <a href="{% url 'polls:poll_update' question.id %}"><button tton type="submit" class="btn btn-sm btn-secondary">Edit</button></a>
                         <button tton type="submit" class="btn btn-sm btn-danger">Delete</button>
                     </td>
                 </tr>

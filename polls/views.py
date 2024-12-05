@@ -56,9 +56,9 @@ class ResultsView(LoginRequiredMixin, generic.DetailView):
 
 class QuestionChoiceCreate(LoginRequiredMixin, CreateView):
 	model = Question
-	# form_class = QuestionForm
+	form_class = QuestionForm
 	template_name = 'polls/question_form.html'
-	fields = ["question_text", "pub_date"]
+	# fields = ["question_text", "pub_date"]
 	success_url = reverse_lazy("polls:index")
 
 	def get_context_data(self, **kwargs):
@@ -104,7 +104,9 @@ class QuestionChoiceUpdate(LoginRequiredMixin, UpdateView):
 			if choices.is_valid():
 				choices.instance = self.object
 				choices.save()
-		return super(QuestionChoiceCreate, self).form_valid(form)
+		return super(QuestionChoiceUpdate, self).form_valid(form)
+	def get_success_url(self) -> str:
+		return reverse_lazy('polls:index')
 
 	
 class QuestionCreate(LoginRequiredMixin, CreateView):
