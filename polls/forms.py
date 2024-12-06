@@ -15,8 +15,8 @@ class QuestionForm(forms.ModelForm):
 # FamilyMemberForm from tutorial
 class ChoiceForm(forms.ModelForm):
     class Meta:
-        model = Question
+        model = Choice
         exclude = ()
 
 # FamilyMemberFormSet from tutorial
-ChoiceFormSet = forms.inlineformset_factory(Question, Choice, form=ChoiceForm, fields=['choice_text'], extra=2, can_delete=True)
+ChoiceFormSet = forms.inlineformset_factory(Question, Choice, form=ChoiceForm, fields=['choice_text'], extra=1, can_delete=True)

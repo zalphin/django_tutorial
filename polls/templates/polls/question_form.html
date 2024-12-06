@@ -22,7 +22,11 @@
                     </tr>
                 </thead>
             {% endif %}
-            <tr class="{% cycle 'row1' 'row2' %} formset_row">
+            {% if forloop.last %}
+                <tr class="formset_row">
+            {% else %}
+                <tr class="">
+            {% endif %}
                 {% for field in form.visible_fields %}
                     <td>
                         {% if forloop.first %}
@@ -42,7 +46,7 @@
 
 <script type="text/javascript">
     $('.formset_row').formset({
-        addText: 'add choice',
+        addText: 'New Row',
         deleteText: 'remove',
         prefix: 'choice_set'
     });
