@@ -43,6 +43,12 @@
             </div>
         </header>
 
+        <div>
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+
         {% block content %}
         {% endblock %}
 

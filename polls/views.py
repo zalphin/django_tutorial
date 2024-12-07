@@ -9,6 +9,7 @@ from django.views import generic, View
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 from .forms import *
 import random
 
@@ -104,6 +105,7 @@ class QuestionChoiceUpdate(LoginRequiredMixin, UpdateView):
 			if choices.is_valid():
 				choices.instance = self.object
 				choices.save()
+			messages.info(self.request, "You did it!")
 		return super(QuestionChoiceUpdate, self).form_valid(form)
 	def get_success_url(self) -> str:
 		return reverse_lazy('polls:index')
