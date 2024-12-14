@@ -1,17 +1,16 @@
 from typing import Any
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.db import transaction
 from django.db.models import F
 from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView
-from django.views import generic, View
+from django.views import generic
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from .forms import *
-import random
 
 from .models import Question, Choice
 
@@ -131,15 +130,17 @@ def vote(request, question_id):
 		selected_choice = question.choice_set.get(pk=request.POST["choice_id"])
 	except (KeyError, Choice.DoesNotExist):
 		# Redisplay the question voting form.
+		messages.error(request, "You didn't select a choice.")
 		return render(
 			request,
 			"polls/detail.html",
 			{
 				"question": question,
-				"error_message": "You didn't select a choice.",
+				# "error_message": "You didn't select a choice.",
 			},
 		)
 	else:
+		messages.info(request, "You successfully voted for " + selected_choice.choice_text)
 		selected_choice.votes = F("votes") + 1
 		selected_choice.save()
 		# Always return an HttpResponseRedirect after successfully dealing
