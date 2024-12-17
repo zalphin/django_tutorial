@@ -73,7 +73,7 @@ class QuestionChoiceCreate(LoginRequiredMixin, CreateView):
 		context = self.get_context_data()
 		choices = context['choices']
 		with transaction.atomic():
-			form.instance.created_by = self.request.user.id
+			form.instance.created_by = self.request.user
 			self.object = form.save()
 			if choices.is_valid():
 				choices.instance = self.object
@@ -114,7 +114,14 @@ class QuestionCreate(LoginRequiredMixin, CreateView):
 	model = Question
 	fields = ['question_text', 'pub_date']
 		
-	
+@login_required
+def question_delete(request, pk):
+	question = get_object_or_404(Question, pk=pk)
+
+	if request.method == 'POST':
+		question.delete()
+		return HttpResponseRedirect(reverse("polls:index"))
+	return render(request, "polls/index.html")
 
 @login_required
 def test_view(request):

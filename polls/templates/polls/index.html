@@ -24,7 +24,10 @@
                     <td>
                         <a href="{{ question.get_absolute_url }}"><button tton class="btn btn-sm btn-primary">Show</button></a>
                         <a href="{% url 'polls:poll_update' question.id %}"><button tton type="submit" class="btn btn-sm btn-secondary">Edit</button></a>
-                        <button tton type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        <form action="{% url 'polls:question_delete' question.id %}" method="post">
+                            {% csrf_token %}
+                            <button tton type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                        </form>
                     </td>
                 </tr>
             {% endfor %}
