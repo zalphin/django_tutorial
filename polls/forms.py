@@ -5,6 +5,9 @@ class QuestionForm(forms.ModelForm):
     class Meta:
         model = Question
         fields = ["question_text", "pub_date"]
+        widgets = {
+            'pub_date': forms.widgets.DateInput(attrs={'type': 'date'})
+        }
         # field_classes = {
         #     "pub_date": ""
         # }
